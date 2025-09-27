@@ -1,37 +1,30 @@
-📘 Maritime RAG Pipeline – README
-🚀 Project Overview
+Perfect 👍 I’ll give you a ready-to-paste README.md file.
+Just copy this into a file named README.md inside your project folder.
 
-This project implements a Retrieval-Augmented Generation (RAG) pipeline for maritime logistics data.
-The goal is to let users ask natural language questions (e.g., “How many tanker vessels arrived at Klaipėda on 2021-01-10?”) and get answers grounded in structured CSV port traffic data.
+# ⚓ Maritime RAG Pipeline
 
-🔑 What’s inside
+## 🚀 Project Overview
+This project implements a **Retrieval-Augmented Generation (RAG) pipeline** for maritime logistics data.  
+It allows users to ask **natural language questions** (e.g., *“How many tanker vessels arrived at Klaipėda on 2021-01-10?”*) and get answers **grounded in structured CSV port traffic data**.
 
-Data ingestion & preprocessing
-Your static maritime dataset (final_data.csv) is split into chunks and embedded.
+### 🔑 Features
+- **Data ingestion & preprocessing** – cleans and chunks static maritime dataset (`final_data.csv`).
+- **Vector database (FAISS)** – stores embeddings for efficient similarity search.
+- **RAG pipeline** – combines retrieval + LLM for natural language answers.
+- **Models used:**
+  - `sentence-transformers/all-MiniLM-L6-v2` → embeddings  
+  - `TinyLlama-1.1B-Chat` (local CPU) → question answering  
+  - (Optional) GPT-4 or other API models can be plugged in.
+- **Why RAG (not fine-tuning)?**  
+  - Data is static but large → retrieval is enough.  
+  - Fine-tuning (QLoRA) is scaffolded but optional, needs GPU.
 
-Vector database (FAISS)
-Stores the embeddings for efficient similarity search.
+---
 
-RAG pipeline
+## 🛠️ Setup Instructions (Windows 10/11)
 
-Query → Retrieve top-k chunks → Feed to LLM → Get natural-language answer.
-
-Models used
-
-sentence-transformers/all-MiniLM-L6-v2 → embeddings
-
-TinyLlama-1.1B-Chat (local CPU) → answering
-
-(Optional) GPT-4 or other API models can be plugged in.
-
-Why RAG (not fine-tuning)?
-
-Data is static but large → retrieval is enough.
-
-Fine-tuning (QLoRA) is scaffolded but optional, needs GPU.
-
-🛠️ Setup Instructions (Windows 10/11)
-1. Navigate to project folder
+### 1. Navigate to project folder
+```powershell
 cd C:\Users\ADMIN\OneDrive\Desktop\maritime_rag_pipeline
 
 2. Create and activate virtual environment
@@ -49,22 +42,24 @@ pip install -U langchain-huggingface langchain-community
 
 📊 Build the Vector Database (FAISS)
 
-This step converts your final_data.csv into searchable embeddings.
+Convert your CSV (final_data.csv) into searchable embeddings:
 
 python .\scripts\chunk_data.py --input ".\data\final_data.csv" --output .\vector_db --sample_rows 50000 --chunk_size 1000 --chunk_overlap 100 --embedding_model sentence-transformers/all-MiniLM-L6-v2
 
 
-Loads first 50k rows from your CSV
+This will:
 
-Splits into chunks of 1000 rows (with 100 overlap)
+Load first 50k rows of your dataset
 
-Embeds using MiniLM
+Split into chunks of 1000 rows (with overlap 100)
 
-Saves FAISS index → .\vector_db\index.faiss + metadata
+Create embeddings using MiniLM
+
+Save FAISS index → .\vector_db\index.faiss + metadata
 
 💬 Ask Questions (RAG QA)
 
-Now you can ask natural-language questions:
+Run natural-language queries:
 
 python .\scripts\rag_qa.py --index .\vector_db --query "How many tanker vessels arrived at Klaipėda on 2021-01-10?" --top_k 2
 
@@ -80,17 +75,16 @@ On 2021-01-10, 2 tanker vessels arrived at Klaipėda.
 Sources: retrieved chunks from FAISS
 
 
-Try more queries:
+Other examples:
 
 python .\scripts\rag_qa.py --index .\vector_db --query "Which vessels stayed in Klaipėda longer than 48 hours?" --top_k 3
-
 python .\scripts\rag_qa.py --index .\vector_db --query "What ports had the most tanker arrivals in January 2021?" --top_k 5
 
 📂 Project Structure
 maritime_rag_pipeline/
 │
 ├── data/
-│   └── final_data.csv         # your cleaned dataset
+│   └── final_data.csv         # your dataset
 │
 ├── vector_db/                 # generated FAISS index & metadata
 │
@@ -105,24 +99,16 @@ maritime_rag_pipeline/
 
 ⚡ Notes for Recruiters
 
-Tech stack: Python, Pandas, LangChain, FAISS, HuggingFace, TinyLlama (LLM).
+Tech stack: Python, Pandas, LangChain, FAISS, HuggingFace, TinyLlama.
 
-What it does: Lets maritime analysts query historical vessel data in plain English.
+What it does: Lets maritime analysts query vessel data in plain English.
 
 Why it matters:
 
-Helps detect port congestion, track tanker arrivals, and monitor dwell times.
+Detect port congestion, tanker arrivals, dwell times.
 
-Shows applied use of RAG + LLM in a real logistics dataset.
+Real-world RAG application on structured data.
 
-Scalability: Works locally, but can be deployed to cloud with API + GPU for 10k+ users.
+Scalability: Runs locally, can scale to cloud APIs with GPUs.
 
-Extensibility: Can be enriched with CO₂ estimation, congestion logic, and trend analysis.
-
-✅ With this README, you’ll always know:
-
-Which folder to cd into
-
-Which commands to run in order
-
-How to explain the project as a production-ready RAG pipeline
+Extensibility: Can integrate CO₂ estimates, congestion thresholds, and trend analysis.
